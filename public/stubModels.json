@@ -1,0 +1,57 @@
+[
+    {
+        "id": "1",
+        "name": "Iris Subspecies Classifier",
+        "parameters": [
+            {
+                "name": "petal_length",
+                "expects": "float"
+            },
+            {
+                "name": "petal_width",
+                "expects": "float"
+            },
+            {
+                "name": "sepal_length",
+                "expects": "float"
+            },
+            {
+                "name": "sepal_width",
+                "expects": "float"
+            }
+        ],
+        "description": "Predicts if flower is Iris Setosa, Iris Versicolor or Iris Virginica based on the petal and sepal length and width"
+    },
+    {
+        "id": "2",
+        "name": "8x8 Handwritten Digits Recognizer",
+        "parameters": [
+            {
+                "name": "features",
+                "expects": "str"
+            }
+        ],
+        "description": "predicts hand written digits from 0 to 9"
+    },
+    {
+        "id": "3",
+        "name": "Some other model",
+        "parameters": [
+            {
+                "name": "features",
+                "expects": "str"
+            }
+        ]
+    },
+    {
+        "id": "4",
+        "name": "ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur Excepteur sint occaecat cupidatat non proident sunt in culpa qui officia deserunt mollit anim id est laborum",
+        "parameters": [
+            {
+                "name": "features",
+                "expects": "str"
+            }
+        ],
+        "description": "ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    }
+]

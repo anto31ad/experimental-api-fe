@@ -90,6 +90,8 @@ When done:
 npm run dev
 ```
 
+3. Go to [localhost:3000 (HTTP)](http://localhost:3000)
+4. Have fun playing around!
 
 ## Licence
 

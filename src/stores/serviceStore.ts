@@ -1,5 +1,9 @@
 import { defineStore } from 'pinia'
-import { requestListOfServices, requestOperationByServiceId, requestServiceInfoById } from '../utils/requests'
+import {
+  requestListOfServices,
+  requestOperationByServiceId,
+  requestServiceInfoById } from '../utils/requests'
+import { useUserStore } from './userStore'
 
 export interface ServiceOverview {
   id: string,
@@ -40,36 +44,66 @@ export const useServiceStore = defineStore('service', {
       this.lastResponse = null
       this.services = []
       this.selectedService = null
+      console.log("cleared service state")
     },
     async initUtils() {
       this.loading = true
       this.errorMessageList = []
+      console.log("initialized service utils")
     },
     
-    async fetchServices () {
+    async fetchServices (
+      userStore: ReturnType<typeof useUserStore>,
+    ) {
+
+      if (userStore.isLoggingOut) {
+        return;
+      }
+      //skip if list is not empty
+      if (!this.isListEmpty) {
+        console.info("service list not empty")
+        return;
+      }
+      console.info("fetching services...")
       this.initUtils()
       try {
-        this.services = await requestListOfServices()
+        this.services = await requestListOfServices(userStore)
       } catch (err) {
         this.errorMessageList.push('Failed to fetch services: ' + err)
       } finally {
         this.loading = false
       }
     },
-    async fetchServiceById (serviceId: string) {
+    async fetchServiceById (
+      serviceId: string,
+      userStore: ReturnType<typeof useUserStore>,
+    ) {
+
+      if (userStore.isLoggingOut) {
+        return;
+      }
       this.initUtils()
+      console.log(`fetching service ${serviceId}`)
       try {
-        this.selectedService = await requestServiceInfoById(serviceId)
+        this.selectedService = await requestServiceInfoById(serviceId, userStore)
       } catch (err) {
         this.errorMessageList.push(`${err}`)
       } finally {
         this.loading = false
       }
     },
-    async makeServiceRequest(serviceId: string, payload: JSON) {
+    async makeServiceRequest(
+      serviceId: string,
+      payload: JSON,
+      userStore: ReturnType<typeof useUserStore>,
+    ) {
+
+      if (userStore.isLoggingOut) {
+        return;
+      }
       this.initUtils()
       try {
-        this.lastResponse = await requestOperationByServiceId(serviceId, payload)
+        this.lastResponse = await requestOperationByServiceId(serviceId, payload, userStore)
       } catch (err) {
         this.errorMessageList.push(`Problem while making request to service '${serviceId}' :${err}`)
       } finally {

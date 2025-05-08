@@ -14,13 +14,13 @@
 import { watchEffect } from 'vue'
 import ServicePicker from '../components/ServicePicker.vue';
 import { useServiceStore } from '../stores/serviceStore';
+import { useUserStore } from '@/stores/userStore';
 
 const serviceStore = useServiceStore();
+const userStore = useUserStore();
 
 watchEffect(() => {
-  if(serviceStore.isListEmpty) {
-    serviceStore.fetchServices()
-  }
+  serviceStore.fetchServices(userStore)
 });
 </script>
 

@@ -28,9 +28,11 @@ import Table from '@/components/Table.vue';
 import { useServiceStore } from '@/stores/serviceStore';
 import DigitsCanvas from '@/components/digits-predictor/Canvas.vue';
 import IrisForm from '@/components/iris-predictor/IrisForm.vue';
+import { useUserStore } from '@/stores/userStore';
 
 const route = useRoute()
 const serviceStore = useServiceStore()
+const userStore = useUserStore()
 
 //const serviceId = ref(null)
 const curService = computed( () => serviceStore.getSelected)
@@ -44,7 +46,7 @@ const customComponent = ref(null)
 
 watchEffect(async () => {
   const serviceId = route.params.id
-  serviceStore.fetchServiceById(serviceId)
+  serviceStore.fetchServiceById(serviceId, userStore)
   customComponent.value = customComponents[serviceId]
 })
 

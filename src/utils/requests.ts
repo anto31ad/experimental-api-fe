@@ -1,12 +1,25 @@
 import { API_ENDPOINTS, DEV_OPTIONS } from '../constants'
-import { type Service, type ServiceOverview } from '../stores/serviceStore'
+import type { Service, ServiceOverview } from '../stores/serviceStore'
 import { useUserStore, type LoginCredentials, type LoginResponse } from '../stores/userStore';
 
-export function resolveAsset(relativePath: string, context: string): string {
-  return new URL(relativePath, context).href;
+const fetchWithAuth = async (
+  userStore: ReturnType<typeof useUserStore>,
+  url: string,
+  payload: RequestInit = {},
+) => {
+  const headers = {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer ' + userStore.getToken,
+    ...payload.headers,
+  };
+
+  const res = await fetch(url, { ...payload, headers });
+  return res;
 }
 
-export const requestListOfServices = async (): Promise<ServiceOverview[]> => {
+export const requestListOfServices = async (
+  userStore: ReturnType<typeof useUserStore>
+): Promise<ServiceOverview[]> => {
 
   if (DEV_OPTIONS.stubModeOn) {
     const res = await fetch(DEV_OPTIONS.stubServicesPath);
@@ -14,14 +27,13 @@ export const requestListOfServices = async (): Promise<ServiceOverview[]> => {
     return servicesList;
   }
 
-  const userStore = useUserStore();
-  const res = await fetch(
-    API_ENDPOINTS.services, {
+  const res = await fetchWithAuth(
+    userStore,
+    API_ENDPOINTS.services,
+    {
       method: 'GET',
-      headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + userStore.getToken,
-    }})
+    }
+  )
   if (!res.ok) {
     throw new Error(`Failed to fetch services: ${res.statusText}`);
   }
@@ -30,7 +42,8 @@ export const requestListOfServices = async (): Promise<ServiceOverview[]> => {
 };
 
 export const requestServiceInfoById = async (
-    serviceId: string
+    serviceId: string,
+    userStore: ReturnType<typeof useUserStore>
 ): Promise<Service> => {
 
   if (DEV_OPTIONS.stubModeOn) {
@@ -45,14 +58,13 @@ export const requestServiceInfoById = async (
     throw new Error(`Service with id '${serviceId}' not found in stub data`);
   }
 
-  const userStore = useUserStore();
-  const res = await fetch(`${API_ENDPOINTS.services}/${serviceId}`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + userStore.getToken,
-    },
-  })
+  const res = await fetchWithAuth(
+    userStore,
+    `${API_ENDPOINTS.services}/${serviceId}`,
+    {
+      method: 'GET',
+    }
+  )
   if (!res.ok) {
     throw new Error(`Failed to fetch service with id '${serviceId}': ${res.statusText}`);
   }
@@ -62,7 +74,8 @@ export const requestServiceInfoById = async (
 
 export const requestOperationByServiceId = async (
   serviceId: string,
-  payload: JSON
+  payload: JSON,
+  userStore: ReturnType<typeof useUserStore>,
 ): Promise<any> => {
 
   if (DEV_OPTIONS.stubModeOn) {
@@ -77,15 +90,14 @@ export const requestOperationByServiceId = async (
     throw new Error(`Service with id '${serviceId}' not found in stub data`);
   }
 
-  const userStore = useUserStore();
-  const res = await fetch(`${API_ENDPOINTS.services}/${serviceId}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + userStore.getToken,
+  const res = await fetchWithAuth(
+    userStore,
+    `${API_ENDPOINTS.services}/${serviceId}`,
+    {
+      method: 'POST',
+      body: JSON.stringify(payload),
     },
-    body: JSON.stringify(payload),
-  })
+  )
   if (!res.ok) {
     throw Error(`Request to service ${serviceId} was unsuccesful: ${res.statusText}`)
   }
@@ -113,4 +125,4 @@ export const requestLogin = async (payload: LoginCredentials) => {
   //if login successful...
   const data: LoginResponse = await res.json();
   return data.access_token;
-} 
+}

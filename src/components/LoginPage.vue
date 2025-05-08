@@ -34,8 +34,9 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { useUserStore } from '../stores/userStore';
+import { useNavigationStore } from '@/stores/navigationStore';
 
-const router = useRouter();
+const navigationStore = useNavigationStore(useRouter());
 const userStore = useUserStore();
 
 const username = ref('');
@@ -43,11 +44,11 @@ const password = ref('');
 const errorMessage = ref('');
 
 async function handleLogin() {
-  await userStore.logIn({
+  const credentials = {
     username: username.value,
     password: password.value,
-  })
-  await router.push('/'); // go to the main page
+  }
+  await userStore.logIn(navigationStore, credentials)
 };
 </script>
 

@@ -42,7 +42,6 @@ router.beforeEach((to, from, next) => {
   const userStore = useUserStore();
 
   const isAuth = userStore.isAuth;
-  console.log('isAuth', isAuth);
   if (isAuth && to.name === 'Login') {
     // user is already authenticated but tries to access the login page;
     // so, redirect user to home page

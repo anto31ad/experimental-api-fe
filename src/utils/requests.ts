@@ -9,9 +9,8 @@ export function resolveAsset(relativePath: string, context: string): string {
 export const requestListOfServices = async (): Promise<ServiceOverview[]> => {
 
   if (DEV_OPTIONS.stubModeOn) {
-    const response = await fetch(DEV_OPTIONS.stubServicesPath);
-    console.log('response', response)
-    const servicesList = await response.json();
+    const res = await fetch(DEV_OPTIONS.stubServicesPath);
+    const servicesList = await res.json();
     return servicesList;
   }
 

@@ -27,8 +27,10 @@
 <script setup>
 import { reactive } from 'vue'
 import { useServiceStore } from '../../stores/serviceStore'
+import { useUserStore } from '@/stores/userStore'
 
 const serviceStore = useServiceStore()
+const userStore = useUserStore()
 
 const form = reactive({
   petal_width: 0,
@@ -39,7 +41,7 @@ const form = reactive({
 
 function submitForm() {
   console.log('Form submitted:', form)
-  serviceStore.makeServiceRequest(1, form)
+  serviceStore.makeServiceRequest(1, form, userStore)
 }
 </script>
 

@@ -9,7 +9,7 @@
       <Card
         :title="item.name"
         :text="item.description"
-        :image-path="item.thumbnail"
+        :image-url="item.thumbnail_url"
       />
     </router-link>
   </div>

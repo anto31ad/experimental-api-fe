@@ -3,12 +3,12 @@ import {
   requestListOfServices,
   requestOperationByServiceId,
   requestServiceInfoById } from '../utils/requests'
-import { useUserStore } from './userStore'
 
 export interface ServiceOverview {
   id: string,
   name?: string,
   description?: string,
+  thumbnail_url?: string,
 }
 
 export interface ServiceParameter {
@@ -52,9 +52,7 @@ export const useServiceStore = defineStore('service', {
       console.log("initialized service utils")
     },
     
-    async fetchServices (
-      userStore: ReturnType<typeof useUserStore>,
-    ) {
+    async fetchServices () {
       //skip if list is not empty
       if (!this.isListEmpty) {
         console.info("service list not empty")
@@ -63,22 +61,19 @@ export const useServiceStore = defineStore('service', {
       console.info("fetching services...")
       this.initUtils()
       try {
-        this.services = await requestListOfServices(userStore)
+        this.services = await requestListOfServices()
       } catch (err) {
         this.errorMessageList.push('Failed to fetch services: ' + err)
       } finally {
         this.loading = false
       }
     },
-    async fetchServiceById (
-      serviceId: string,
-      userStore: ReturnType<typeof useUserStore>,
-    ) {
+    async fetchServiceById (serviceId: string) {
 
       this.initUtils()
       console.log(`fetching service ${serviceId}`)
       try {
-        this.selectedService = await requestServiceInfoById(serviceId, userStore)
+        this.selectedService = await requestServiceInfoById(serviceId)
       } catch (err) {
         this.errorMessageList.push(`${err}`)
       } finally {
@@ -88,12 +83,11 @@ export const useServiceStore = defineStore('service', {
     async makeServiceRequest(
       serviceId: string,
       payload: JSON,
-      userStore: ReturnType<typeof useUserStore>,
     ) {
 
       this.initUtils()
       try {
-        this.lastResponse = await requestOperationByServiceId(serviceId, payload, userStore)
+        this.lastResponse = await requestOperationByServiceId(serviceId, payload)
       } catch (err) {
         this.errorMessageList.push(`Problem while making request to service '${serviceId}' :${err}`)
       } finally {

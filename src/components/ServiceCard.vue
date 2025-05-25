@@ -1,6 +1,10 @@
 <template>
   <div class="card">
-    <img :src="thumbnailUrl" alt="Card image" class="card-image" />
+    <img
+      :src="thumbnailUrl"
+      @error="onImgError"
+      alt="Card image"
+      class="card-image" />
     <div class="card-body">
       <h2 class="card-title">
         <div v-if="title" class="truncate">{{ title }}</div>
@@ -15,22 +19,30 @@
 </template>
 
 <script setup>
+import { API_ENDPOINTS } from '@/constants';
+import { requestRandomPictureUrl } from '@/utils/requests';
 import { ref, watchEffect } from 'vue';
 
-defineProps({
+const props = defineProps({
   title: String,
   text: String,
-  imagePath: String
+  imageUrl: String
 })
 
 const thumbnailUrl = ref('loading.png');
 
 watchEffect(async () => {
-  const thumbnailRes = await fetch('https://picsum.photos/400/200');
-  if(thumbnailRes.ok) {
-    thumbnailUrl.value = thumbnailRes.url;
+
+  if (props.imageUrl) {
+    thumbnailUrl.value = `${API_ENDPOINTS.root}${props.imageUrl}`;
+  } else {
+    thumbnailUrl.value = await requestRandomPictureUrl();
   }
 });
+
+function onImgError() {
+  thumbnailUrl.value = null;
+}
 
 </script>
 <style scoped>

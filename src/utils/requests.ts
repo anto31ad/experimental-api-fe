@@ -1,6 +1,5 @@
 import { API_ENDPOINTS, DEV_OPTIONS } from '../constants'
 import type { Service, ServiceOverview } from '../stores/serviceStore'
-import { useUserStore} from '../stores/userStore';
 
 const fetchWithAuth = async (
   url: string,
@@ -19,9 +18,7 @@ const fetchWithAuth = async (
   return res;
 }
 
-export const requestListOfServices = async (
-  userStore: ReturnType<typeof useUserStore>
-): Promise<ServiceOverview[]> => {
+export const requestListOfServices = async (): Promise<ServiceOverview[]> => {
 
   if (DEV_OPTIONS.stubModeOn) {
     const res = await fetch(DEV_OPTIONS.stubServicesPath);
@@ -42,10 +39,17 @@ export const requestListOfServices = async (
   return obj.data
 };
 
-export const requestServiceInfoById = async (
-    serviceId: string,
-    userStore: ReturnType<typeof useUserStore>
-): Promise<Service> => {
+export const requestRandomPictureUrl = async () => {
+  
+  const thumbnailRes = await fetch('https://picsum.photos/400/200');
+
+  if(!thumbnailRes.ok) {
+    throw Error("Could not obtain an url for a random picture")
+  }
+  return thumbnailRes.url;
+}
+
+export const requestServiceInfoById = async (serviceId: string): Promise<Service> => {
 
   if (DEV_OPTIONS.stubModeOn) {
     const response = await fetch(DEV_OPTIONS.stubServicesPath);
@@ -74,9 +78,7 @@ export const requestServiceInfoById = async (
 
 export const requestOperationByServiceId = async (
   serviceId: string,
-  payload: JSON,
-  userStore: ReturnType<typeof useUserStore>,
-) => {
+  payload: JSON) => {
 
   if (DEV_OPTIONS.stubModeOn) {
     const response = await fetch(DEV_OPTIONS.stubServicesPath);

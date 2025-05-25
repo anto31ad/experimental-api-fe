@@ -119,7 +119,7 @@ export const login = () => {
   if (DEV_OPTIONS.stubModeOn) {
     return;
   }
-  window.location.href = API_ENDPOINTS.loginWithGitHub;
+  window.location.href = `${API_ENDPOINTS.loginWithGitHub}?next_url=http://localhost:3000/login/callback`;
 }
 
 export const logout = () => {
@@ -128,7 +128,7 @@ export const logout = () => {
   if (DEV_OPTIONS.stubModeOn) {
     return;
   }
-  window.location.href = API_ENDPOINTS.logout;
+  window.location.href = `${API_ENDPOINTS.logout}?next_url=http://localhost:3000/`;
 }
 
 export const isAuthenticated = () => {

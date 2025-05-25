@@ -2,54 +2,32 @@
   <h1>Experimental API</h1>
   <div class="login-page">
     <h2>Login</h2>
-    <form @submit.prevent="handleLogin">
-      <div class="form-group">
-          <label for="username">Username</label>
-          <input
-              type="text"
-              id="username"
-              v-model="username"
-              placeholder="Enter your username"
-          />
-      </div>
-      <div class="form-group">
-          <label for="password">Password</label>
-          <input
-              type="password"
-              id="password"
-              v-model="password"
-              placeholder="Enter your password"
-          />
-      </div>
-      <button type="submit">Login</button>
+    <form @submit.prevent="login">
+      <button type="submit">Login with GitHub</button>
     </form>
-    <div v-if="errorMessage" class="error-message">
+    <div v-if="errorMessage" class="error-box">
       {{ errorMessage }}
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { ref, watchEffect } from 'vue';
 
-import { useUserStore } from '../stores/userStore';
 import { useNavigationStore } from '@/stores/navigationStore';
+import { isAuthenticated, login } from '@/utils/requests';
 
-const navigationStore = useNavigationStore(useRouter());
-const userStore = useUserStore();
-
-const username = ref('');
-const password = ref('');
+const navigator = useNavigationStore(useRouter());
 const errorMessage = ref('');
 
-async function handleLogin() {
-  const credentials = {
-    username: username.value,
-    password: password.value,
+watchEffect(async () => {
+
+  if(isAuthenticated()) {
+    navigator.goHome()
+    return;
   }
-  await userStore.logIn(navigationStore, credentials)
-};
+});
 </script>
 
 <style scoped>

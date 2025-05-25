@@ -1,19 +1,21 @@
 import { API_ENDPOINTS, DEV_OPTIONS } from '../constants'
 import type { Service, ServiceOverview } from '../stores/serviceStore'
-import { useUserStore, type LoginCredentials, type LoginResponse } from '../stores/userStore';
+import { useUserStore} from '../stores/userStore';
 
 const fetchWithAuth = async (
-  userStore: ReturnType<typeof useUserStore>,
   url: string,
   payload: RequestInit = {},
 ) => {
   const headers = {
     'Content-Type': 'application/json',
-    'Authorization': 'Bearer ' + userStore.getToken,
     ...payload.headers,
   };
 
-  const res = await fetch(url, { ...payload, headers });
+  const res = await fetch(url, {
+    ...payload,
+    headers,
+    credentials: "include"
+  });
   return res;
 }
 
@@ -28,7 +30,6 @@ export const requestListOfServices = async (
   }
 
   const res = await fetchWithAuth(
-    userStore,
     API_ENDPOINTS.services,
     {
       method: 'GET',
@@ -59,7 +60,6 @@ export const requestServiceInfoById = async (
   }
 
   const res = await fetchWithAuth(
-    userStore,
     `${API_ENDPOINTS.services}/${serviceId}`,
     {
       method: 'GET',
@@ -76,7 +76,7 @@ export const requestOperationByServiceId = async (
   serviceId: string,
   payload: JSON,
   userStore: ReturnType<typeof useUserStore>,
-): Promise<any> => {
+) => {
 
   if (DEV_OPTIONS.stubModeOn) {
     const response = await fetch(DEV_OPTIONS.stubServicesPath);
@@ -91,7 +91,6 @@ export const requestOperationByServiceId = async (
   }
 
   const res = await fetchWithAuth(
-    userStore,
     `${API_ENDPOINTS.services}/${serviceId}`,
     {
       method: 'POST',
@@ -105,24 +104,35 @@ export const requestOperationByServiceId = async (
   return obj.data;
 };
 
-// AUTH
-
-export const requestLogin = async (payload: LoginCredentials) => {
-  const res = await fetch(API_ENDPOINTS.login, {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: new URLSearchParams({
-        grant_type: 'password',
-        username: payload.username,
-        password: payload.password,
-    }),
-  })
+export const requestThisUser = async () => {
+  const res = await fetchWithAuth(API_ENDPOINTS.thisUser)
   if (!res.ok) {
-    throw Error(res.statusText);
+    throw Error(`Cannot fetch this user ${res.statusText}`)
   }
-  //if login successful...
-  const data: LoginResponse = await res.json();
-  return data.access_token;
+  const user = await res.json();
+  return user
+}
+
+export const login = () => {
+  if (DEV_OPTIONS.stubModeOn) {
+    return;
+  }
+  window.location.href = API_ENDPOINTS.loginWithGitHub;
+}
+
+export const logout = () => {
+  localStorage.setItem("expAPI_isLoggedIn", 'false');
+
+  if (DEV_OPTIONS.stubModeOn) {
+    return;
+  }
+  window.location.href = API_ENDPOINTS.logout;
+}
+
+export const isAuthenticated = () => {
+  if (DEV_OPTIONS.stubModeOn) {
+    return true
+  }
+  const storedVar = localStorage.getItem("expAPI_isLoggedIn") === 'true'
+  return storedVar
 }

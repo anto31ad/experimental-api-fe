@@ -8,6 +8,9 @@ export const AUTH_TOKEN_KEY = 'experimentalApi_token';
 
 export const API_ENDPOINTS = {
   login: `${API_BASE_URL}:${API_PORT}/token`,
+  loginWithGitHub: `${API_BASE_URL}:${API_PORT}/login/github`,
+  logout: `${API_BASE_URL}:${API_PORT}/logout`,
+  thisUser: `${API_BASE_URL}:${API_PORT}/users/me`, 
   services: `${API_BASE_URL}:${API_PORT}/services`,
 }
 

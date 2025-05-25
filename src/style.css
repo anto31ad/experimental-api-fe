@@ -54,3 +54,9 @@ h1 {
   font-size: 3.2em;
   line-height: 1.1;
 }
+
+.error-box {
+  background-color: rgb(226, 72, 52);
+  margin-top: 20px;
+  padding: 10px;
+}

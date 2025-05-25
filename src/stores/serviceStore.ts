@@ -28,7 +28,7 @@ export const useServiceStore = defineStore('service', {
     services: [] as ServiceOverview[],
     selectedService: null as Service | null,
     loading: false,
-    errorMessageList: [] as Array<String>,
+    errorMessageList: [] as Array<string>,
     lastResponse: null as JSON | null,
   }),
   getters: {
@@ -38,7 +38,7 @@ export const useServiceStore = defineStore('service', {
     hasErrors: (state) => state.errorMessageList.length > 0,
   },
   actions: {
-    async clearState() {
+    clearState() {
       this.loading = false
       this.errorMessageList = []
       this.lastResponse = null
@@ -46,7 +46,7 @@ export const useServiceStore = defineStore('service', {
       this.selectedService = null
       console.log("cleared service state")
     },
-    async initUtils() {
+    initUtils() {
       this.loading = true
       this.errorMessageList = []
       console.log("initialized service utils")
@@ -55,10 +55,6 @@ export const useServiceStore = defineStore('service', {
     async fetchServices (
       userStore: ReturnType<typeof useUserStore>,
     ) {
-
-      if (userStore.isLoggingOut) {
-        return;
-      }
       //skip if list is not empty
       if (!this.isListEmpty) {
         console.info("service list not empty")
@@ -79,9 +75,6 @@ export const useServiceStore = defineStore('service', {
       userStore: ReturnType<typeof useUserStore>,
     ) {
 
-      if (userStore.isLoggingOut) {
-        return;
-      }
       this.initUtils()
       console.log(`fetching service ${serviceId}`)
       try {
@@ -98,9 +91,6 @@ export const useServiceStore = defineStore('service', {
       userStore: ReturnType<typeof useUserStore>,
     ) {
 
-      if (userStore.isLoggingOut) {
-        return;
-      }
       this.initUtils()
       try {
         this.lastResponse = await requestOperationByServiceId(serviceId, payload, userStore)

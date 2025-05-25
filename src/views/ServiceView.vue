@@ -4,15 +4,6 @@
     <p> {{ curService.description }}</p>
     <hr>
     <div v-if="curService">
-      <div v-if="curService.parameters">
-        <h2>Parameters</h2>
-        <Table
-          :data="curService.parameters"
-          :columns="['name', 'description', 'data_type']"
-          filterKey="">
-        </Table>
-      </div>
-      <hr>
       <component v-if="customComponent" :is="customComponent"/>
     </div>
     <div v-else>

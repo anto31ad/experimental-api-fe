@@ -18,9 +18,9 @@
   </div>
 </template>
 <script setup>
-import Card from './Card.vue'
+import Card from './ServiceCard.vue'
 
-const props = defineProps({
+defineProps({
   itemList: Array,
 })
 </script>

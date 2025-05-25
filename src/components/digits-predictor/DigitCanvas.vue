@@ -19,8 +19,10 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useServiceStore } from '@/stores/serviceStore'
+import { useUserStore } from '@/stores/userStore';
 
 const serviceStore = useServiceStore();
+const userStore = useUserStore()
 
 const pixelSize = 20
 const gridSize = 8
@@ -83,7 +85,7 @@ function submit() {
   const data = pixels.value.flat().join(';')
   serviceStore.makeServiceRequest('2', {
     pixels: data
-  });
+  }, userStore);
 }
 </script>
 

@@ -7,8 +7,8 @@
         <div v-else>Untitled</div>
       </h2>
       <p class="card-text truncate">
-        <div v-if="text">{{ text }}</div>
-        <div v-else>No description available.</div>
+        <span v-if="text">{{ text }}</span>
+        <span v-else>No description available.</span>
       </p>
     </div>
   </div>
@@ -17,7 +17,7 @@
 <script setup>
 import { ref, watchEffect } from 'vue';
 
-const props = defineProps({
+defineProps({
   title: String,
   text: String,
   imagePath: String

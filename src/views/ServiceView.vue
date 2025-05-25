@@ -24,9 +24,9 @@
 import { ref, computed, watchEffect, markRaw } from 'vue';
 import { useRoute } from 'vue-router';
 
-import Table from '@/components/Table.vue';
+import Table from '@/components/CustomTable.vue';
 import { useServiceStore } from '@/stores/serviceStore';
-import DigitsCanvas from '@/components/digits-predictor/Canvas.vue';
+import DigitsCanvas from '@/components/digits-predictor/DigitCanvas.vue';
 import IrisForm from '@/components/iris-predictor/IrisForm.vue';
 import { useUserStore } from '@/stores/userStore';
 
